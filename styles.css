@@ -1,0 +1,996 @@
+/* =====================================
+   CONFIGURACIÓN GENERAL
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #020006;
+    color: white;
+}
+
+body {
+    cursor: default;
+}
+
+/* =====================================
+   FONDO PRINCIPAL
+===================================== */
+
+#pagina {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 0, 100, 0.15),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(90, 0, 255, 0.18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(255, 0, 50, 0.15),
+            transparent 30%
+        ),
+        #020006;
+}
+
+/* =====================================
+   LUCES DEL FONDO
+===================================== */
+
+.luz {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #ff0055;
+    filter: blur(100px);
+    opacity: 0.12;
+    animation: moverLuz 7s infinite alternate ease-in-out;
+}
+
+.luz:nth-child(1) {
+    left: 5%;
+    top: 5%;
+}
+
+.luz:nth-child(2) {
+    right: 5%;
+    top: 15%;
+    animation-delay: 2s;
+}
+
+.luz:nth-child(3) {
+    left: 30%;
+    bottom: -100px;
+    animation-delay: 4s;
+}
+
+@keyframes moverLuz {
+    from {
+        transform: translate(0, 0);
+    }
+
+    to {
+        transform: translate(100px, -60px);
+    }
+}
+
+/* =====================================
+   TARJETA 3D
+===================================== */
+
+#tarjeta {
+    position: absolute;
+    width: min(850px, 90vw);
+    height: min(650px, 85vh);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
+    border-radius: 35px;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 0, 100, 0.12),
+            rgba(5, 0, 15, 0.96) 70%
+        );
+    border: 2px solid rgba(100, 0, 255, 0.45);
+    box-shadow:
+        0 0 30px rgba(90, 0, 255, 0.5),
+        0 0 80px rgba(255, 0, 100, 0.1),
+        inset 0 0 60px rgba(255, 0, 100, 0.08);
+    overflow: hidden;
+    transition: transform 0.12s ease-out, opacity 0.6s ease, box-shadow 0.3s ease;
+}
+
+/* =====================================
+   CORAZÓN PRINCIPAL
+===================================== */
+
+#corazonContenedor {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+    z-index: 20;
+}
+
+#corazon {
+    position: relative;
+    width: 85px;
+    height: 85px;
+    background: #ff176f;
+    transform: rotate(-45deg);
+    box-shadow:
+        0 0 15px #ff176f,
+        0 0 35px #ff176f,
+        0 0 70px #ff176f,
+        0 0 120px rgba(255, 0, 100, 0.7);
+    animation: latido 1.2s infinite;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+#corazon.corazon-activado {
+    animation: none;
+    transform: rotate(-45deg) scale(1.08);
+    filter: brightness(1.1);
+}
+
+#corazon::before,
+#corazon::after {
+    content: "";
+    position: absolute;
+    width: 85px;
+    height: 85px;
+    background: #ff176f;
+    border-radius: 50%;
+}
+
+#corazon::before {
+    top: -42px;
+    left: 0;
+}
+
+#corazon::after {
+    top: 0;
+    left: 42px;
+}
+
+@keyframes latido {
+    0%,
+    100% {
+        transform: rotate(-45deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(-45deg) scale(1.15);
+    }
+}
+
+/* =====================================
+   TEXTO DEL CORAZÓN
+===================================== */
+
+#instruccion {
+    margin-top: 90px;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #ffc0d8;
+    text-shadow:
+        0 0 10px #ff176f,
+        0 0 20px #ff176f;
+}
+
+/* =====================================
+   PARTÍCULAS
+===================================== */
+
+.particula {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ff4f9a;
+    box-shadow:
+        0 0 8px #ff176f,
+        0 0 18px #ff176f;
+    pointer-events: none;
+    animation: subirParticula linear forwards;
+}
+
+@keyframes subirParticula {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5);
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--movX), var(--movY)) scale(0);
+    }
+}
+
+/* =====================================
+   CORAZONES QUE EXPLOTAN
+===================================== */
+
+.miniCorazon {
+    position: absolute;
+    color: #ff2875;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 100;
+    text-shadow:
+        0 0 10px #ff176f,
+        0 0 25px #ff176f;
+    animation: explosion 2.5s ease-out forwards;
+}
+
+@keyframes explosion {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.2) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) scale(1.5) rotate(360deg);
+    }
+}
+
+/* =====================================
+   SEGUNDA ESCENA
+===================================== */
+
+#escena2 {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.96);
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(255, 0, 100, 0.20),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(80, 0, 255, 0.15),
+            transparent 30%
+        ),
+        #020006;
+    z-index: 50;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* =====================================
+   TÍTULO
+===================================== */
+
+#estrellas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.estrella {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px #fff, 0 0 8px #ff5fa2;
+    animation: parpadear 2.5s infinite ease-in-out, driftEstrella 6s infinite ease-in-out, caerEstrella 5s infinite ease-in-out;
+}
+
+.estrella-fugaz {
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    box-shadow: 0 0 8px #fff, 0 0 16px #ff5fa2;
+    animation: estrellaFugaz 2.5s linear infinite;
+}
+
+@keyframes parpadear {
+    0%,
+    100% {
+        opacity: 0.25;
+        transform: scale(0.7) translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.5) translateY(-2px);
+    }
+}
+
+@keyframes driftEstrella {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(6px, -5px);
+    }
+
+    100% {
+        transform: translate(-3px, 4px);
+    }
+}
+
+@keyframes caerEstrella {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(8px) scale(1.2);
+    }
+
+    100% {
+        transform: translateY(16px) scale(0.8);
+        opacity: 0.2;
+    }
+}
+
+@keyframes estrellaFugaz {
+    0% {
+        transform: translate(0, 0) scale(0.3);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(120px, 70px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+#titulo {
+    position: absolute;
+    top: 35px;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 0 0 10px #ff176f, 0 0 30px #ff176f;
+    animation: aparecer 2s ease;
+    z-index: 2;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================
+   FRASES EN ÓRBITA
+===================================== */
+
+#corazonOrbital {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+}
+
+#frasesOrbital {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.corazon-central {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 180px;
+    color: #ff5fa2;
+    text-shadow: 0 0 24px #ff4da6, 0 0 48px #ff1f7a, 0 0 90px #ff006e;
+    animation: latidoOrbital 1.2s infinite ease-in-out;
+    z-index: 2;
+}
+
+.frase-orbital {
+    position: absolute;
+    transform: translate(-50%, -50%) translate(0px, 0px);
+    font-size: 18px;
+    color: #ffe2ed;
+    text-align: center;
+    width: 200px;
+    line-height: 1.35;
+    text-shadow: 0 0 10px #ff176f, 0 0 20px #ff176f;
+    opacity: 0;
+    animation: suspenderEnElEspacio var(--dur, 16s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    pointer-events: none;
+}
+
+@keyframes latidoOrbital {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+}
+
+@keyframes suspenderEnElEspacio {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(0.6);
+    }
+
+    8% {
+        opacity: 1;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    45% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.25), calc(var(--dy) * 0.25)) scale(1.03);
+    }
+
+    70% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5)) scale(1.08);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.8), calc(var(--dy) * 0.8)) scale(1.15);
+    }
+}
+
+/* =====================================
+   ÁRBOL
+===================================== */
+
+#arbol {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    left: 50%;
+    top: 51%;
+    transform: translate(-50%, -50%);
+}
+
+/* =====================================
+   TRONCO
+===================================== */
+
+.tronco {
+    position: absolute;
+    width: 32px;
+    height: 240px;
+    left: 50%;
+    bottom: 25px;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background: linear-gradient(90deg, #25000e, #8d1740, #4b001d, #a52050, #25000e);
+    box-shadow: 0 0 20px rgba(255, 0, 80, 0.5);
+}
+
+/* ramas */
+
+.rama {
+    position: absolute;
+    height: 15px;
+    background: #68112f;
+    border-radius: 20px;
+    transform-origin: left center;
+    box-shadow: 0 0 15px rgba(255, 0, 80, 0.5);
+}
+
+.rama1 {
+    width: 190px;
+    left: 50%;
+    top: 63%;
+    transform: rotate(155deg);
+}
+
+.rama2 {
+    width: 180px;
+    left: 50%;
+    top: 55%;
+    transform: rotate(25deg);
+}
+
+.rama3 {
+    width: 140px;
+    left: 50%;
+    top: 45%;
+    transform: rotate(155deg);
+}
+
+.rama4 {
+    width: 130px;
+    left: 50%;
+    top: 40%;
+    transform: rotate(25deg);
+}
+
+/* =====================================
+   CORAZONES DEL ÁRBOL
+===================================== */
+
+.corazonArbol {
+    position: absolute;
+    color: #ff2d76;
+    font-size: 15px;
+    text-shadow:
+        0 0 5px #ff176f,
+        0 0 15px #ff176f,
+        0 0 30px #ff0055;
+    animation: brilloArbol 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes brilloArbol {
+    from {
+        opacity: 0.35;
+        transform: scale(0.75);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+/* =====================================
+   FRASES
+===================================== */
+
+.frase {
+    position: absolute;
+    color: #ffe2ed;
+    font-size: 18px;
+    text-shadow:
+        0 0 10px #ff176f,
+        0 0 20px #ff176f;
+    animation: flotarFrase 4s infinite alternate ease-in-out;
+}
+
+@keyframes flotarFrase {
+    from {
+        transform: translateY(0);
+        opacity: 0.55;
+    }
+
+    to {
+        transform: translateY(-20px);
+        opacity: 1;
+    }
+}
+
+/* =====================================
+   GALERÍA
+===================================== */
+
+#galeria {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 420px;
+    height: 420px;
+    transform: translate(-50%, -50%);
+    z-index: 80;
+    animation: rotarOrbita 14s linear infinite;
+}
+
+.foto {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 2px solid #ff4288;
+    box-shadow:
+        0 0 10px #ff176f,
+        0 0 25px rgba(255, 0, 100, 0.7),
+        0 0 45px rgba(255, 0, 100, 0.4);
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-165px) rotate(calc(-1 * var(--angle)));
+    animation: aparecerFoto 1s forwards;
+    transition: transform 0.5s, box-shadow 0.5s;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.foto:nth-child(1) {
+    --angle: 0deg;
+    animation-delay: 0.5s;
+}
+
+.foto:nth-child(2) {
+    --angle: 90deg;
+    animation-delay: 1s;
+}
+
+.foto:nth-child(3) {
+    --angle: 180deg;
+    animation-delay: 1.5s;
+}
+
+.foto:nth-child(4) {
+    --angle: 270deg;
+    animation-delay: 2s;
+}
+
+@keyframes aparecerFoto {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-165px) rotate(calc(-1 * var(--angle)));
+    }
+}
+
+@keyframes rotarOrbita {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.foto:hover {
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-165px) rotate(calc(-1 * var(--angle))) scale(1.15);
+    box-shadow:
+        0 0 20px #ff176f,
+        0 0 50px #ff176f;
+}
+
+/* =====================================
+   BOTÓN
+===================================== */
+
+#volver {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    padding: 10px 20px;
+    border: 1px solid #ff4288;
+    border-radius: 30px;
+    background: rgba(255, 0, 80, 0.15);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff176f;
+    transition: 0.3s ease, transform 0.25s ease;
+    z-index: 100;
+}
+
+#volver:hover {
+    background: #ff176f;
+    transform: scale(1.05) translateY(-2px);
+}
+
+/* =====================================
+   BOTÓN MÚSICA
+===================================== */
+
+#musicaBtn {
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid #ff4288;
+    background: rgba(255, 0, 80, 0.15);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff176f;
+    z-index: 100;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+#musicaBtn:hover {
+    transform: scale(1.06);
+    background: rgba(255, 23, 111, 0.25);
+}
+
+/* =====================================
+   RESPONSIVE CELULAR
+===================================== */
+
+@media (max-width: 900px) {
+    #tarjeta {
+        width: min(92vw, 560px);
+        height: min(82vh, 720px);
+        border-radius: 28px;
+    }
+
+    #corazon {
+        width: clamp(72px, 16vw, 95px);
+        height: clamp(72px, 16vw, 95px);
+    }
+
+    #corazon::before,
+    #corazon::after {
+        width: clamp(72px, 16vw, 95px);
+        height: clamp(72px, 16vw, 95px);
+    }
+
+    #corazon::before {
+        top: calc(-1 * clamp(72px, 16vw, 95px) / 2);
+    }
+
+    #corazon::after {
+        left: calc(clamp(72px, 16vw, 95px) / 2);
+    }
+
+    #instruccion {
+        margin-top: clamp(78px, 18vw, 100px);
+        font-size: clamp(10px, 2.2vw, 13px);
+        letter-spacing: clamp(2px, 0.6vw, 4px);
+    }
+
+    #titulo {
+        font-size: clamp(20px, 4.6vw, 28px);
+        top: calc(env(safe-area-inset-top) + 24px);
+    }
+
+    #arbol {
+        width: min(72vw, 480px);
+        height: min(72vw, 480px);
+        top: 50%;
+    }
+
+    .tronco {
+        height: clamp(180px, 34vw, 240px);
+        width: clamp(22px, 4.2vw, 32px);
+    }
+
+    .rama1 {
+        width: clamp(140px, 31vw, 190px);
+    }
+
+    .rama2 {
+        width: clamp(130px, 29vw, 180px);
+    }
+
+    .rama3 {
+        width: clamp(100px, 24vw, 140px);
+    }
+
+    .rama4 {
+        width: clamp(92px, 22vw, 130px);
+    }
+
+    .frase {
+        font-size: clamp(12px, 2.7vw, 16px);
+    }
+
+    .corazon-central {
+        font-size: clamp(96px, 28vw, 180px);
+    }
+
+    .frase-orbital {
+        width: clamp(120px, 34vw, 200px);
+        font-size: clamp(10px, 2.4vw, 18px);
+    }
+
+    #galeria {
+        width: min(76vw, 420px);
+        height: min(76vw, 420px);
+        top: 52%;
+    }
+
+    .foto {
+        width: clamp(72px, 18vw, 110px);
+        height: clamp(72px, 18vw, 110px);
+        border-radius: 14px;
+        --orbit-radius: clamp(100px, 28vw, 165px);
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+    }
+
+    @keyframes aparecerFoto {
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+        }
+    }
+
+    .foto:hover {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle))) scale(1.1);
+    }
+
+    #volver {
+        right: max(16px, env(safe-area-inset-right));
+        top: max(16px, env(safe-area-inset-top));
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    #tarjeta {
+        width: 94vw;
+        height: 78vh;
+        border-radius: 24px;
+    }
+
+    #corazon {
+        width: clamp(60px, 17vw, 72px);
+        height: clamp(60px, 17vw, 72px);
+    }
+
+    #corazon::before,
+    #corazon::after {
+        width: clamp(60px, 17vw, 72px);
+        height: clamp(60px, 17vw, 72px);
+    }
+
+    #corazon::before {
+        top: calc(-1 * clamp(60px, 17vw, 72px) / 2);
+    }
+
+    #corazon::after {
+        left: calc(clamp(60px, 17vw, 72px) / 2);
+    }
+
+    #instruccion {
+        margin-top: 68px;
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    #titulo {
+        font-size: 20px;
+        top: calc(env(safe-area-inset-top) + 18px);
+    }
+
+    #arbol {
+        width: min(80vw, 320px);
+        height: min(80vw, 320px);
+        top: 52%;
+    }
+
+    .tronco {
+        height: 170px;
+        width: 22px;
+    }
+
+    .frase {
+        font-size: 12px;
+    }
+
+    .corazon-central {
+        font-size: clamp(78px, 24vw, 110px);
+    }
+
+    .frase-orbital {
+        width: clamp(100px, 28vw, 140px);
+        font-size: clamp(9px, 2.4vw, 12px);
+    }
+
+    #galeria {
+        width: min(82vw, 320px);
+        height: min(82vw, 320px);
+        top: 54%;
+    }
+
+    .foto {
+        width: clamp(64px, 18vw, 84px);
+        height: clamp(64px, 18vw, 84px);
+        border-radius: 12px;
+        --orbit-radius: clamp(92px, 27vw, 120px);
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+    }
+
+    @keyframes aparecerFoto {
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+        }
+    }
+
+    .foto:hover {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle))) scale(1.08);
+    }
+
+    #volver {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+    #tarjeta {
+        width: min(88vw, 560px);
+        height: min(88vh, 520px);
+        border-radius: 22px;
+    }
+
+    #corazonContenedor {
+        top: 46%;
+    }
+
+    #titulo {
+        font-size: 20px;
+        top: calc(env(safe-area-inset-top) + 14px);
+    }
+
+    #arbol {
+        width: min(46vw, 320px);
+        height: min(46vw, 320px);
+        top: 56%;
+    }
+
+    .corazon-central {
+        font-size: clamp(72px, 20vw, 110px);
+    }
+
+    .frase-orbital {
+        width: clamp(90px, 20vw, 120px);
+        font-size: 9px;
+    }
+
+    #galeria {
+        width: min(48vw, 280px);
+        height: min(48vw, 280px);
+        top: 54%;
+    }
+
+    .foto {
+        width: clamp(58px, 14vw, 74px);
+        height: clamp(58px, 14vw, 74px);
+        --orbit-radius: clamp(84px, 20vw, 110px);
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+    }
+
+    @keyframes aparecerFoto {
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+        }
+    }
+}
