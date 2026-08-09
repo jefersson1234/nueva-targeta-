@@ -6,16 +6,26 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --mx: 0;
+    --my: 0;
 }
 
 html,
 body {
     width: 100%;
-    height: 100%;
+    height: 100dvh;
+    height: 100vh;
     overflow: hidden;
     font-family: Arial, sans-serif;
     background: #020006;
     color: white;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -61,6 +71,7 @@ body {
 
 #pagina {
     width: 100vw;
+    height: 100dvh;
     height: 100vh;
     position: relative;
     overflow: hidden;
@@ -136,7 +147,7 @@ body {
     height: min(650px, 85vh);
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg);
+    transform: translate(-50%, -50%) rotateX(calc(var(--my) * -12deg)) rotateY(calc(var(--mx) * 12deg)) skewX(calc(var(--mx) * -1.5deg)) skewY(calc(var(--my) * -1.5deg));
     border-radius: 35px;
     background:
         radial-gradient(
@@ -150,19 +161,23 @@ body {
         0 0 120px rgba(255, 0, 100, 0.18),
         inset 0 0 100px rgba(255, 255, 255, 0.06);
     overflow: hidden;
-    transition: transform 0.12s ease-out, opacity 0.6s ease, box-shadow 0.3s ease;
+    transition: opacity 0.6s ease, box-shadow 0.3s ease;
     animation: entradaTarjeta 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     opacity: 0;
+    backface-visibility: hidden;
+    contain: layout paint;
+    transform-style: preserve-3d;
+    perspective: 1200px;
 }
 
 @keyframes entradaTarjeta {
     from {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.92);
+        filter: brightness(1.4);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        filter: brightness(1);
     }
 }
 
@@ -173,6 +188,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 24px;
     pointer-events: none;
+    transform: translateZ(1px);
 }
 
 #tarjeta::after {
@@ -182,6 +198,7 @@ body {
     height: 42%;
     background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.06));
     pointer-events: none;
+    transform: translateZ(2px);
 }
 
 #tarjeta:hover {
@@ -199,23 +216,22 @@ body {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(20px) rotateX(calc(var(--my) * -6deg)) rotateY(calc(var(--mx) * 6deg));
     text-align: center;
     cursor: pointer;
     z-index: 20;
     padding: 24px 28px;
     animation: entradaCorazon 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
     opacity: 0;
+    transform-style: preserve-3d;
 }
 
 @keyframes entradaCorazon {
     from {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.7);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
     }
 }
 
@@ -225,11 +241,12 @@ body {
     top: 50%;
     width: 240px;
     height: 240px;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translateZ(15px) rotateX(calc(var(--my) * -5deg)) rotateY(calc(var(--mx) * 5deg));
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     animation: pulsoHalo 2.8s ease-in-out infinite;
     box-shadow: 0 0 30px rgba(255, 23, 111, 0.15);
+    transform-style: preserve-3d;
 }
 
 .portada-ornamentos {
@@ -238,6 +255,8 @@ body {
     pointer-events: none;
     animation: entradaOrnamentos 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
     opacity: 0;
+    transform: translateZ(-10px) rotateX(calc(var(--my) * -3deg)) rotateY(calc(var(--mx) * 3deg));
+    transform-style: preserve-3d;
 }
 
 @keyframes entradaOrnamentos {
@@ -254,6 +273,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 50%;
     animation: rotar 10s linear infinite;
+    transform-style: preserve-3d;
 }
 
 .anillo-1 {
@@ -262,6 +282,7 @@ body {
     top: 8%;
     left: 8%;
     opacity: 0.5;
+    transform: translateZ(-15px) rotateX(calc(var(--my) * -2deg)) rotateY(calc(var(--mx) * 2deg));
 }
 
 .anillo-2 {
@@ -272,6 +293,7 @@ body {
     border-color: rgba(255, 23, 111, 0.35);
     animation-duration: 14s;
     animation-direction: reverse;
+    transform: translateZ(-20px) rotateX(calc(var(--my) * -2.5deg)) rotateY(calc(var(--mx) * 2.5deg));
 }
 
 .anillo-3 {
@@ -281,6 +303,7 @@ body {
     left: 50%;
     border-color: rgba(255, 255, 255, 0.25);
     animation-duration: 7s;
+    transform: translateZ(-12px) rotateX(calc(var(--my) * -2deg)) rotateY(calc(var(--mx) * 2deg));
 }
 
 .portada-texto {
@@ -288,7 +311,7 @@ body {
     top: 7%;
     left: 50%;
     width: min(85%, 440px);
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(5px) rotateX(calc(var(--my) * -2deg)) rotateY(calc(var(--mx) * 2deg));
     text-align: center;
     z-index: 5;
     padding: 16px 24px;
@@ -299,18 +322,19 @@ body {
     box-shadow:
         0 10px 40px rgba(0, 0, 0, 0.25),
         inset 0 0 30px rgba(255, 255, 255, 0.04);
-    animation: entradaPortada 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    animation: entradaPortada 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     opacity: 0;
+    transform-style: preserve-3d;
 }
 
 @keyframes entradaPortada {
     0%, 100% {
         opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
+        scale: 0.96;
     }
     25%, 75% {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
+        scale: 1;
     }
 }
 
@@ -321,8 +345,17 @@ body {
     color: #ffd8e7;
     margin-bottom: 8px;
     opacity: 0.9;
-    animation: entradaEtiqueta 6s cubic-bezier(0.22, 1, 0.36, 1) 0s infinite;
+    animation: entradaEtiqueta 2.5s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
     opacity: 0;
+}
+
+@keyframes entradaEtiqueta {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.9;
+    }
 }
 
 .portada-texto h2 {
@@ -333,18 +366,16 @@ body {
     text-shadow:
         0 0 20px rgba(255, 23, 111, 0.4),
         0 0 40px rgba(90, 0, 255, 0.25);
-    animation: entradaTitulo 7s cubic-bezier(0.22, 1, 0.36, 1) 0.4s infinite;
+    animation: entradaTitulo 2.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
     opacity: 0;
 }
 
 @keyframes entradaTitulo {
-    0%, 100% {
+    from {
         opacity: 0;
-        transform: translateX(-50%) translateY(-18px);
     }
-    18%, 68% {
+    to {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
     }
 }
 
@@ -355,18 +386,16 @@ body {
     font-style: italic;
     letter-spacing: 0.5px;
     text-shadow: 0 0 12px rgba(255, 23, 111, 0.25);
-    animation: entradaMensaje 8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
+    animation: entradaMensaje 2.5s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
     opacity: 0;
 }
 
 @keyframes entradaMensaje {
-    0%, 100% {
+    from {
         opacity: 0;
-        transform: translateX(-50%) translateY(-15px);
     }
-    22%, 62% {
+    to {
         opacity: 0.75;
-        transform: translateX(-50%) translateY(0);
     }
 }
 
@@ -439,23 +468,22 @@ body {
 
 @keyframes rotar {
     from {
-        transform: rotate(0deg);
+        rotate: 0deg;
     }
-
     to {
-        transform: rotate(360deg);
+        rotate: 360deg;
     }
 }
 
 @keyframes pulsoHalo {
     0%,
     100% {
-        transform: translate(-50%, -50%) scale(0.9);
+        scale: 0.9;
         opacity: 0.25;
     }
 
     50% {
-        transform: translate(-50%, -50%) scale(1.08);
+        scale: 1.08;
         opacity: 0.6;
     }
 }
@@ -574,6 +602,7 @@ body {
         #020006;
     z-index: 50;
     transition: opacity 0.6s ease, transform 0.6s ease;
+    contain: layout paint;
 }
 
 /* =====================================
@@ -586,6 +615,7 @@ body {
     pointer-events: none;
     overflow: hidden;
     z-index: 1;
+    contain: content;
 }
 
 .estrella {
@@ -698,6 +728,7 @@ body {
     position: absolute;
     inset: 0;
     z-index: 60;
+    contain: content;
 }
 
 #frasesOrbital {
@@ -906,6 +937,7 @@ body {
     transform: translate(-50%, -50%);
     z-index: 80;
     animation: rotarOrbita 14s linear infinite;
+    contain: content;
 }
 
 .foto {
@@ -1228,6 +1260,103 @@ body {
     }
 }
 
+@media (max-width: 380px) {
+    #tarjeta {
+        width: 96vw;
+        height: 76vh;
+        border-radius: 20px;
+    }
+
+    #corazon {
+        width: 60px;
+        height: 60px;
+    }
+
+    #corazon::before,
+    #corazon::after {
+        width: 60px;
+        height: 60px;
+    }
+
+    #corazon::before {
+        top: -30px;
+    }
+
+    #corazon::after {
+        left: 30px;
+    }
+
+    #instruccion {
+        margin-top: 60px;
+        font-size: 9px;
+        letter-spacing: 1.5px;
+    }
+
+    #titulo {
+        font-size: 18px;
+        top: calc(env(safe-area-inset-top) + 14px);
+    }
+
+    #arbol {
+        width: min(90vw, 260px);
+        height: min(90vw, 260px);
+        top: 50%;
+    }
+
+    .tronco {
+        height: 140px;
+        width: 18px;
+    }
+
+    .rama1 { width: 120px; }
+    .rama2 { width: 110px; }
+    .rama3 { width: 90px; }
+    .rama4 { width: 80px; }
+
+    .frase {
+        font-size: 11px;
+    }
+
+    .corazon-central {
+        font-size: clamp(60px, 22vw, 90px);
+    }
+
+    .frase-orbital {
+        width: 100px;
+        font-size: 9px;
+    }
+
+    #galeria {
+        width: min(90vw, 260px);
+        height: min(90vw, 260px);
+        top: 56%;
+    }
+
+    .foto {
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        --orbit-radius: 80px;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+    }
+
+    @keyframes aparecerFoto {
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
+        }
+    }
+
+    .foto:hover {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle))) scale(1.08);
+    }
+
+    #volver {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}
+
 @media (max-width: 768px) {
     .boton-musica {
         top: 14px;
@@ -1241,7 +1370,7 @@ body {
     }
 }
 
-@media (max-height: 700px) and (orientation: landscape) {
+@media (max-width: 900px) and (max-height: 700px) and (orientation: landscape) {
     #tarjeta {
         width: min(88vw, 560px);
         height: min(88vh, 520px);
@@ -1290,5 +1419,81 @@ body {
             opacity: 1;
             transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
         }
+    }
+}
+
+/* =====================================
+   RENDIMIENTO MÓVIL
+ ===================================== */
+
+@media (max-width: 600px) {
+    .portada-texto {
+        animation-duration: 2.5s;
+        animation-iteration-count: 1;
+    }
+
+    .portada-etiqueta {
+        animation-duration: 2.5s;
+        animation-iteration-count: 1;
+    }
+
+    .portada-texto h2 {
+        animation-duration: 2.5s;
+        animation-iteration-count: 1;
+    }
+
+    .portada-mensaje {
+        animation-duration: 2.5s;
+        animation-iteration-count: 1;
+    }
+
+    #instruccion {
+        animation-duration: 2.5s;
+        animation-iteration-count: 1;
+    }
+
+    #corazonContenedor {
+        animation-duration: 1s;
+        animation-delay: 0.2s;
+    }
+
+    #tarjeta {
+        animation-duration: 0.8s;
+    }
+
+    .portada-texto {
+        backdrop-filter: none;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .boton-musica {
+        backdrop-filter: none;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    #corazon {
+        box-shadow:
+            0 0 15px #ff176f,
+            0 0 30px #ff176f,
+            0 0 60px rgba(255, 0, 100, 0.7);
+    }
+
+    .anillo {
+        display: none;
+    }
+
+    .luz {
+        width: 160px;
+        height: 160px;
+        filter: blur(70px);
+        opacity: 0.08;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

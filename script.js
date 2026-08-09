@@ -1,6 +1,6 @@
 /* =========================================
    ELEMENTOS
-========================================= */
+ ========================================= */
 
 const tarjeta = document.getElementById("tarjeta");
 const corazon = document.getElementById("corazonContenedor");
@@ -10,6 +10,7 @@ const botonMusica = document.getElementById("botonMusica");
 const pagina = document.getElementById("pagina");
 let audioContext;
 let musicaEncendida = false;
+const esMovil = window.innerWidth < 600;
 
 function reproducirEfecto() {
     if (!audioContext) {
@@ -59,9 +60,7 @@ async function iniciarMusica() {
 }
 
 function mostrarEscena2() {
-    tarjeta.style.display = "block";
     tarjeta.style.opacity = "0";
-    tarjeta.style.transform = "translate(-50%, -50%) scale(0.95)";
 
     escena2.style.display = "block";
     escena2.style.opacity = "0";
@@ -77,7 +76,8 @@ function mostrarEscena2() {
 
     setTimeout(function () {
         tarjeta.style.display = "none";
-    }, 600);
+        tarjeta.style.transform = "";
+    }, 400);
 }
 
 function crearFrasesOrbital() {
@@ -142,13 +142,15 @@ function crearFrasesOrbital() {
     const heartRect = heart.getBoundingClientRect();
     const endX = heartRect.left - sceneRect.left + heartRect.width / 2;
     const endY = heartRect.top - sceneRect.top + heartRect.height / 2;
+    const frasesMovil = frases.slice(0, 24);
+    const lista = esMovil ? frasesMovil : frases;
 
-    frases.forEach((texto, index) => {
+    lista.forEach((texto, index) => {
         const frase = document.createElement("div");
         frase.className = "frase-orbital";
         frase.textContent = texto;
-        frase.style.setProperty("--delay", `${index * 1.15}s`);
-        frase.style.setProperty("--dur", `${22 + Math.random() * 4}s`);
+        frase.style.setProperty("--delay", `${index * (esMovil ? 0.7 : 1.15)}s`);
+        frase.style.setProperty("--dur", `${esMovil ? 16 + Math.random() * 3 : 22 + Math.random() * 4}s`);
 
         const lado = Math.floor(Math.random() * 4);
         let startX;
@@ -181,7 +183,8 @@ function crearFrasesOrbital() {
 
 function crearEstrellas() {
     const contenedor = document.getElementById("estrellas");
-    const cantidad = 120;
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 60 : 120;
 
     for (let i = 0; i < cantidad; i++) {
         const estrella = document.createElement("div");
@@ -204,7 +207,7 @@ function crearEstrellas() {
         contenedor.appendChild(estrella);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < (esMovil ? 4 : 10); i++) {
         const fugaz = document.createElement("div");
         fugaz.className = "estrella estrella-fugaz";
         fugaz.style.left = Math.random() * 100 + "%";
@@ -222,12 +225,10 @@ function ocultarEscena2() {
     escena2.style.transform = "scale(0.96)";
 
     tarjeta.style.display = "block";
-    tarjeta.style.opacity = "0";
-    tarjeta.style.transform = "translate(-50%, -50%) scale(0.95)";
+    tarjeta.style.transform = "";
 
     requestAnimationFrame(function () {
         tarjeta.style.opacity = "1";
-        tarjeta.style.transform = "translate(-50%, -50%) rotateX(0deg) rotateY(0deg)";
     });
 
     setTimeout(function () {
@@ -236,52 +237,74 @@ function ocultarEscena2() {
 }
 
 /* =========================================
-   MOVIMIENTO DEL MOUSE
-========================================= */
+   MOVIMIENTO DEL MOUSE Y TOUCH
+   PARALLAX 3D CON SUAVIZADO
+ ========================================= */
+
+const mouse = {
+    targetX: 0,
+    targetY: 0,
+    currentX: 0,
+    currentY: 0,
+    active: false
+};
+
+function lerp(start, end, factor) {
+    return start + (end - start) * factor;
+}
+
+function actualizarMovimiento() {
+    mouse.currentX = lerp(mouse.currentX, mouse.targetX, 0.08);
+    mouse.currentY = lerp(mouse.currentY, mouse.targetY, 0.08);
+
+    const mx = mouse.currentX;
+    const my = mouse.currentY;
+
+    if (esMovil) {
+        document.documentElement.style.setProperty("--mx", mx * 0.08);
+        document.documentElement.style.setProperty("--my", my * 0.08);
+    } else {
+        document.documentElement.style.setProperty("--mx", mx);
+        document.documentElement.style.setProperty("--my", my);
+    }
+
+    requestAnimationFrame(actualizarMovimiento);
+}
 
 document.addEventListener("mousemove", function (e) {
-    const x = e.clientX / window.innerWidth - 0.5;
-    const y = e.clientY / window.innerHeight - 0.5;
-    const rotY = x * 15;
-    const rotX = -y * 15;
-
-    tarjeta.style.transform = `
-        translate(-50%, -50%)
-        rotateX(${rotX}deg)
-        rotateY(${rotY}deg)
-    `;
+    mouse.targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+    mouse.active = true;
 });
-
-/* =========================================
-   MOVIMIENTO CON EL DEDO
-   PARA CELULAR
-========================================= */
 
 document.addEventListener(
     "touchmove",
     function (e) {
         if (!e.touches.length) return;
-
         const touch = e.touches[0];
-        const x = touch.clientX / window.innerWidth - 0.5;
-        const y = touch.clientY / window.innerHeight - 0.5;
-        const rotY = x * 15;
-        const rotX = -y * 15;
-
-        tarjeta.style.transform = `
-            translate(-50%, -50%)
-            rotateX(${rotX}deg)
-            rotateY(${rotY}deg)
-        `;
+        mouse.targetX = (touch.clientX / window.innerWidth - 0.5) * 2;
+        mouse.targetY = (touch.clientY / window.innerHeight - 0.5) * 2;
+        mouse.active = true;
     },
     { passive: true }
 );
+
+document.addEventListener("mouseleave", function () {
+    mouse.targetX = 0;
+    mouse.targetY = 0;
+    mouse.active = false;
+});
+
+requestAnimationFrame(actualizarMovimiento);
 
 /* =========================================
    PARTÍCULAS
 ========================================= */
 
 function crearParticula() {
+    const esMovil = window.innerWidth < 600;
+    if (esMovil && Math.random() > 0.5) return;
+
     const p = document.createElement("div");
     p.className = "particula";
     p.style.left = Math.random() * 100 + "%";
@@ -306,8 +329,10 @@ setInterval(crearParticula, 100);
 function explosionCorazones() {
     const centroX = window.innerWidth / 2;
     const centroY = window.innerHeight * 0.45;
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 40 : 80;
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < cantidad; i++) {
         const h = document.createElement("div");
         h.className = "miniCorazon";
         h.innerHTML = "❤";
@@ -332,8 +357,10 @@ function explosionCorazones() {
 
 function crearArbol() {
     const arbol = document.getElementById("arbol");
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 140 : 280;
 
-    for (let i = 0; i < 280; i++) {
+    for (let i = 0; i < cantidad; i++) {
         const h = document.createElement("div");
         h.className = "corazonArbol";
         h.innerHTML = "♥";
@@ -374,6 +401,10 @@ corazon.addEventListener("click", function () {
     reproducirEfecto();
     corazon.classList.add("corazon-activado");
 
+    mouse.targetX = 0;
+    mouse.targetY = 0;
+    mouse.active = false;
+
     setTimeout(function () {
         corazon.classList.remove("corazon-activado");
     }, 220);
@@ -394,6 +425,9 @@ corazon.addEventListener("click", function () {
 
 document.getElementById("volver").addEventListener("click", function () {
     reproducirEfecto();
+    mouse.targetX = 0;
+    mouse.targetY = 0;
+    mouse.active = false;
     ocultarEscena2();
 });
 
