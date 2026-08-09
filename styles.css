@@ -11,18 +11,48 @@
 html,
 body {
     width: 100%;
-    height: 100dvh;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
     font-family: Arial, sans-serif;
     background: #020006;
     color: white;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
 }
 
 body {
     cursor: default;
+}
+
+.boton-musica {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 90;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: clamp(11px, 1.8vw, 13px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    max-width: calc(100vw - 36px);
+    white-space: nowrap;
+}
+
+.boton-musica:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 10px 28px rgba(255, 0, 100, 0.2);
+}
+
+.boton-musica.activo {
+    background: rgba(255, 23, 111, 0.26);
+    border-color: rgba(255, 23, 111, 0.6);
+    box-shadow: 0 0 20px rgba(255, 23, 111, 0.2);
 }
 
 /* =====================================
@@ -31,7 +61,6 @@ body {
 
 #pagina {
     width: 100vw;
-    height: 100dvh;
     height: 100vh;
     position: relative;
     overflow: hidden;
@@ -112,16 +141,54 @@ body {
     background:
         radial-gradient(
             circle at center,
-            rgba(255, 0, 100, 0.12),
-            rgba(5, 0, 15, 0.96) 70%
+            rgba(255, 0, 100, 0.18),
+            rgba(5, 0, 15, 0.96) 68%
         );
-    border: 2px solid rgba(100, 0, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow:
-        0 0 30px rgba(90, 0, 255, 0.5),
-        0 0 80px rgba(255, 0, 100, 0.1),
-        inset 0 0 60px rgba(255, 0, 100, 0.08);
+        0 0 60px rgba(90, 0, 255, 0.35),
+        0 0 120px rgba(255, 0, 100, 0.18),
+        inset 0 0 100px rgba(255, 255, 255, 0.06);
     overflow: hidden;
     transition: transform 0.12s ease-out, opacity 0.6s ease, box-shadow 0.3s ease;
+    animation: entradaTarjeta 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes entradaTarjeta {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+#tarjeta::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    pointer-events: none;
+}
+
+#tarjeta::after {
+    content: "";
+    position: absolute;
+    inset: auto 8% 8% 8%;
+    height: 42%;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.06));
+    pointer-events: none;
+}
+
+#tarjeta:hover {
+    box-shadow:
+        0 0 80px rgba(90, 0, 255, 0.45),
+        0 0 140px rgba(255, 0, 100, 0.25),
+        inset 0 0 100px rgba(255, 255, 255, 0.06);
 }
 
 /* =====================================
@@ -131,52 +198,232 @@ body {
 #corazonContenedor {
     position: absolute;
     left: 50%;
-    top: 45%;
+    top: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     cursor: pointer;
     z-index: 20;
+    padding: 24px 28px;
+    animation: entradaCorazon 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+    opacity: 0;
+}
+
+@keyframes entradaCorazon {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.7);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.corazon-halo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 240px;
+    height: 240px;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: pulsoHalo 2.8s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(255, 23, 111, 0.15);
+}
+
+.portada-ornamentos {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: entradaOrnamentos 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes entradaOrnamentos {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.anillo {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    animation: rotar 10s linear infinite;
+}
+
+.anillo-1 {
+    width: 220px;
+    height: 220px;
+    top: 8%;
+    left: 8%;
+    opacity: 0.5;
+}
+
+.anillo-2 {
+    width: 320px;
+    height: 320px;
+    right: -60px;
+    bottom: -80px;
+    border-color: rgba(255, 23, 111, 0.35);
+    animation-duration: 14s;
+    animation-direction: reverse;
+}
+
+.anillo-3 {
+    width: 140px;
+    height: 140px;
+    top: 16%;
+    left: 50%;
+    border-color: rgba(255, 255, 255, 0.25);
+    animation-duration: 7s;
+}
+
+.portada-texto {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    width: min(85%, 440px);
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 5;
+    padding: 16px 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.25),
+        inset 0 0 30px rgba(255, 255, 255, 0.04);
+    animation: entradaPortada 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    opacity: 0;
+}
+
+@keyframes entradaPortada {
+    0%, 100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    25%, 75% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.portada-etiqueta {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #ffd8e7;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    animation: entradaEtiqueta 6s cubic-bezier(0.22, 1, 0.36, 1) 0s infinite;
+    opacity: 0;
+}
+
+.portada-texto h2 {
+    font-size: clamp(1.3rem, 2.4vw, 2.1rem);
+    line-height: 1.2;
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow:
+        0 0 20px rgba(255, 23, 111, 0.4),
+        0 0 40px rgba(90, 0, 255, 0.25);
+    animation: entradaTitulo 7s cubic-bezier(0.22, 1, 0.36, 1) 0.4s infinite;
+    opacity: 0;
+}
+
+@keyframes entradaTitulo {
+    0%, 100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-18px);
+    }
+    18%, 68% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.portada-mensaje {
+    margin-top: 8px;
+    font-size: clamp(0.75rem, 1.6vw, 0.95rem);
+    color: rgba(255, 255, 255, 0.75);
+    font-style: italic;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 12px rgba(255, 23, 111, 0.25);
+    animation: entradaMensaje 8s cubic-bezier(0.22, 1, 0.36, 1) 0.8s infinite;
+    opacity: 0;
+}
+
+@keyframes entradaMensaje {
+    0%, 100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-15px);
+    }
+    22%, 62% {
+        opacity: 0.75;
+        transform: translateX(-50%) translateY(0);
+    }
 }
 
 #corazon {
     position: relative;
-    width: 85px;
-    height: 85px;
+    width: 100px;
+    height: 100px;
     background: #ff176f;
     transform: rotate(-45deg);
     box-shadow:
-        0 0 15px #ff176f,
+        0 0 25px #ff176f,
+        0 0 50px #ff176f,
+        0 0 100px #ff176f,
+        0 0 160px rgba(255, 0, 100, 0.8);
+    animation: latido 1.2s infinite;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+#corazon:hover {
+    transform: rotate(-45deg) scale(1.1);
+    box-shadow:
         0 0 35px #ff176f,
         0 0 70px #ff176f,
-        0 0 120px rgba(255, 0, 100, 0.7);
-    animation: latido 1.2s infinite;
-    transition: transform 0.2s ease, box-shadow 0.3s ease, filter 0.3s ease;
+        0 0 130px #ff176f,
+        0 0 200px rgba(255, 0, 100, 1);
+    filter: brightness(1.15);
 }
 
 #corazon.corazon-activado {
     animation: none;
     transform: rotate(-45deg) scale(1.08);
-    filter: brightness(1.1);
+    filter: brightness(1.2);
+    box-shadow:
+        0 0 30px #ff176f,
+        0 0 60px #ff176f,
+        0 0 120px #ff176f,
+        0 0 200px rgba(255, 0, 100, 1);
 }
 
 #corazon::before,
 #corazon::after {
     content: "";
     position: absolute;
-    width: 85px;
-    height: 85px;
+    width: 100px;
+    height: 100px;
     background: #ff176f;
     border-radius: 50%;
 }
 
 #corazon::before {
-    top: -42px;
+    top: -50px;
     left: 0;
 }
 
 #corazon::after {
     top: 0;
-    left: 42px;
+    left: 50px;
 }
 
 @keyframes latido {
@@ -190,23 +437,60 @@ body {
     }
 }
 
-/* =====================================
-   TEXTO DEL CORAZÓN
-===================================== */
+@keyframes rotar {
+    from {
+        transform: rotate(0deg);
+    }
 
-#instruccion {
-    margin-top: 90px;
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: #ffc0d8;
-    text-shadow:
-        0 0 10px #ff176f,
-        0 0 20px #ff176f;
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulsoHalo {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0.25;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.08);
+        opacity: 0.6;
+    }
 }
 
 /* =====================================
-   PARTÍCULAS
-===================================== */
+    TEXTO DEL CORAZÓN
+ ===================================== */
+
+#instruccion {
+    margin-top: 120px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #ffd7e5;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 12px #ff176f,
+        0 0 24px #ff176f;
+    animation: entradaInstruccion 9s cubic-bezier(0.22, 1, 0.36, 1) 1.2s infinite;
+    opacity: 0;
+}
+
+@keyframes entradaInstruccion {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    28%, 58% {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================
+    PARTÍCULAS
+ ===================================== */
 
 .particula {
     position: absolute;
@@ -438,14 +722,15 @@ body {
 .frase-orbital {
     position: absolute;
     transform: translate(-50%, -50%) translate(0px, 0px);
-    font-size: 18px;
+    font-size: 14px;
     color: #ffe2ed;
     text-align: center;
-    width: 200px;
+    width: 180px;
     line-height: 1.35;
+    letter-spacing: 0.3px;
     text-shadow: 0 0 10px #ff176f, 0 0 20px #ff176f;
     opacity: 0;
-    animation: suspenderEnElEspacio var(--dur, 16s) ease-in-out infinite;
+    animation: suspenderEnElEspacio var(--dur, 24s) cubic-bezier(0.2, 0.9, 0.2, 1) infinite;
     animation-delay: var(--delay, 0s);
     pointer-events: none;
 }
@@ -464,30 +749,26 @@ body {
 @keyframes suspenderEnElEspacio {
     0% {
         opacity: 0;
-        transform: translate(-50%, -50%) translate(0px, 0px) scale(0.6);
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(0.65);
     }
 
     8% {
         opacity: 1;
     }
 
-    20% {
-        opacity: 1;
-    }
-
-    45% {
+    50% {
         opacity: 0.95;
-        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.25), calc(var(--dy) * 0.25)) scale(1.03);
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.3)) scale(1.02);
     }
 
-    70% {
-        opacity: 0.6;
-        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5)) scale(1.08);
+    82% {
+        opacity: 0.25;
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.72), calc(var(--dy) * 0.72)) scale(1.08);
     }
 
     100% {
         opacity: 0;
-        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.8), calc(var(--dy) * 0.8)) scale(1.15);
+        transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.95), calc(var(--dy) * 0.95)) scale(1.14);
     }
 }
 
@@ -947,104 +1228,20 @@ body {
     }
 }
 
-@media (max-width: 380px) {
-    #tarjeta {
-        width: 96vw;
-        height: 76vh;
-        border-radius: 20px;
+@media (max-width: 768px) {
+    .boton-musica {
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 9px 13px;
     }
 
-    #corazon {
-        width: 60px;
-        height: 60px;
-    }
-
-    #corazon::before,
-    #corazon::after {
-        width: 60px;
-        height: 60px;
-    }
-
-    #corazon::before {
-        top: -30px;
-    }
-
-    #corazon::after {
-        left: 30px;
-    }
-
-    #instruccion {
-        margin-top: 60px;
-        font-size: 9px;
-        letter-spacing: 1.5px;
-    }
-
-    #titulo {
-        font-size: 18px;
-        top: calc(env(safe-area-inset-top) + 14px);
-    }
-
-    #arbol {
-        width: min(90vw, 260px);
-        height: min(90vw, 260px);
-        top: 50%;
-    }
-
-    .tronco {
-        height: 140px;
-        width: 18px;
-    }
-
-    .rama1 { width: 120px; }
-    .rama2 { width: 110px; }
-    .rama3 { width: 90px; }
-    .rama4 { width: 80px; }
-
-    .frase {
-        font-size: 11px;
-    }
-
-    .corazon-central {
-        font-size: clamp(60px, 22vw, 90px);
-    }
-
-    .frase-orbital {
-        width: 100px;
-        font-size: 9px;
-    }
-
-    #galeria {
-        width: min(90vw, 260px);
-        height: min(90vw, 260px);
-        top: 56%;
-    }
-
-    .foto {
-        width: 56px;
-        height: 56px;
-        border-radius: 10px;
-        --orbit-radius: 80px;
-        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
-    }
-
-    @keyframes aparecerFoto {
-        to {
-            opacity: 1;
-            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle)));
-        }
-    }
-
-    .foto:hover {
-        transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--angle))) scale(1.08);
-    }
-
-    #volver {
-        padding: 6px 10px;
-        font-size: 11px;
+    .boton-musica:hover {
+        transform: translateX(-50%) translateY(-2px);
     }
 }
 
-@media (max-width: 900px) and (max-height: 700px) and (orientation: landscape) {
+@media (max-height: 700px) and (orientation: landscape) {
     #tarjeta {
         width: min(88vw, 560px);
         height: min(88vh, 520px);

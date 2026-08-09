@@ -1,2 +1,0 @@
-# nueva-targeta-
-targeta virtual

@@ -6,6 +6,7 @@ const tarjeta = document.getElementById("tarjeta");
 const corazon = document.getElementById("corazonContenedor");
 const escena2 = document.getElementById("escena2");
 const musica = document.getElementById("musica");
+const botonMusica = document.getElementById("botonMusica");
 const pagina = document.getElementById("pagina");
 let audioContext;
 let musicaEncendida = false;
@@ -146,8 +147,8 @@ function crearFrasesOrbital() {
         const frase = document.createElement("div");
         frase.className = "frase-orbital";
         frase.textContent = texto;
-        frase.style.setProperty("--delay", `${index * 0.3}s`);
-        frase.style.setProperty("--dur", `${17.5 + Math.random() * 3.5}s`);
+        frase.style.setProperty("--delay", `${index * 1.15}s`);
+        frase.style.setProperty("--dur", `${22 + Math.random() * 4}s`);
 
         const lado = Math.floor(Math.random() * 4);
         let startX;
@@ -180,8 +181,7 @@ function crearFrasesOrbital() {
 
 function crearEstrellas() {
     const contenedor = document.getElementById("estrellas");
-    const esMovil = window.innerWidth < 600;
-    const cantidad = esMovil ? 60 : 120;
+    const cantidad = 120;
 
     for (let i = 0; i < cantidad; i++) {
         const estrella = document.createElement("div");
@@ -204,7 +204,7 @@ function crearEstrellas() {
         contenedor.appendChild(estrella);
     }
 
-    for (let i = 0; i < (esMovil ? 5 : 10); i++) {
+    for (let i = 0; i < 10; i++) {
         const fugaz = document.createElement("div");
         fugaz.className = "estrella estrella-fugaz";
         fugaz.style.left = Math.random() * 100 + "%";
@@ -282,9 +282,6 @@ document.addEventListener(
 ========================================= */
 
 function crearParticula() {
-    const esMovil = window.innerWidth < 600;
-    if (esMovil && Math.random() > 0.5) return;
-
     const p = document.createElement("div");
     p.className = "particula";
     p.style.left = Math.random() * 100 + "%";
@@ -309,10 +306,8 @@ setInterval(crearParticula, 100);
 function explosionCorazones() {
     const centroX = window.innerWidth / 2;
     const centroY = window.innerHeight * 0.45;
-    const esMovil = window.innerWidth < 600;
-    const cantidad = esMovil ? 40 : 80;
 
-    for (let i = 0; i < cantidad; i++) {
+    for (let i = 0; i < 80; i++) {
         const h = document.createElement("div");
         h.className = "miniCorazon";
         h.innerHTML = "❤";
@@ -337,10 +332,8 @@ function explosionCorazones() {
 
 function crearArbol() {
     const arbol = document.getElementById("arbol");
-    const esMovil = window.innerWidth < 600;
-    const cantidad = esMovil ? 140 : 280;
 
-    for (let i = 0; i < cantidad; i++) {
+    for (let i = 0; i < 280; i++) {
         const h = document.createElement("div");
         h.className = "corazonArbol";
         h.innerHTML = "♥";
@@ -358,6 +351,20 @@ function crearArbol() {
         arbol.appendChild(h);
     }
 }
+
+/* =========================================
+   BOTÓN DE MÚSICA
+========================================= */
+
+botonMusica.addEventListener("click", async function () {
+    reproducirEfecto();
+    const ok = await iniciarMusica();
+
+    if (ok) {
+        botonMusica.textContent = "🔊 Música ON";
+        botonMusica.classList.add("activo");
+    }
+});
 
 /* =========================================
    CLICK / TOQUE AL CORAZÓN
