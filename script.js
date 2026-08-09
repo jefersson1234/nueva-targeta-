@@ -180,7 +180,8 @@ function crearFrasesOrbital() {
 
 function crearEstrellas() {
     const contenedor = document.getElementById("estrellas");
-    const cantidad = 120;
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 60 : 120;
 
     for (let i = 0; i < cantidad; i++) {
         const estrella = document.createElement("div");
@@ -203,7 +204,7 @@ function crearEstrellas() {
         contenedor.appendChild(estrella);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < (esMovil ? 5 : 10); i++) {
         const fugaz = document.createElement("div");
         fugaz.className = "estrella estrella-fugaz";
         fugaz.style.left = Math.random() * 100 + "%";
@@ -281,6 +282,9 @@ document.addEventListener(
 ========================================= */
 
 function crearParticula() {
+    const esMovil = window.innerWidth < 600;
+    if (esMovil && Math.random() > 0.5) return;
+
     const p = document.createElement("div");
     p.className = "particula";
     p.style.left = Math.random() * 100 + "%";
@@ -305,8 +309,10 @@ setInterval(crearParticula, 100);
 function explosionCorazones() {
     const centroX = window.innerWidth / 2;
     const centroY = window.innerHeight * 0.45;
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 40 : 80;
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < cantidad; i++) {
         const h = document.createElement("div");
         h.className = "miniCorazon";
         h.innerHTML = "❤";
@@ -331,8 +337,10 @@ function explosionCorazones() {
 
 function crearArbol() {
     const arbol = document.getElementById("arbol");
+    const esMovil = window.innerWidth < 600;
+    const cantidad = esMovil ? 140 : 280;
 
-    for (let i = 0; i < 280; i++) {
+    for (let i = 0; i < cantidad; i++) {
         const h = document.createElement("div");
         h.className = "corazonArbol";
         h.innerHTML = "♥";
