@@ -6,7 +6,6 @@ const tarjeta = document.getElementById("tarjeta");
 const corazon = document.getElementById("corazonContenedor");
 const escena2 = document.getElementById("escena2");
 const musica = document.getElementById("musica");
-const botonMusica = document.getElementById("botonMusica");
 const pagina = document.getElementById("pagina");
 let audioContext;
 let musicaEncendida = false;
@@ -380,25 +379,39 @@ function crearArbol() {
 }
 
 /* =========================================
-   BOTÓN DE MÚSICA
-========================================= */
+   CONTROL DE MÚSICA DESDE EL CORAZÓN
+ ========================================= */
 
-botonMusica.addEventListener("click", async function () {
+const indicadorMusica = document.getElementById("indicadorMusica");
+
+async function toggleMusica() {
     reproducirEfecto();
-    const ok = await iniciarMusica();
-
-    if (ok) {
-        botonMusica.classList.add("activo");
-        const icono = esMovil ? '🔊' : '🎵 ON';
-        botonMusica.innerHTML = esMovil ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>' : '🎵 ON';
+    
+    if (musicaEncendida) {
+        musica.pause();
+        musicaEncendida = false;
+        indicadorMusica.textContent = "";
+        indicadorMusica.classList.remove("visible");
+        return;
     }
-});
+    
+    const ok = await iniciarMusica();
+    if (ok) {
+        indicadorMusica.textContent = esMovil ? "♪" : "♪ Música ON";
+        indicadorMusica.classList.add("visible");
+        setTimeout(function () {
+            indicadorMusica.classList.remove("visible");
+        }, 2000);
+    }
+}
 
 /* =========================================
    CLICK / TOQUE AL CORAZÓN
-========================================= */
+ ========================================= */
 
-corazon.addEventListener("click", function () {
+function activarCorazon(e) {
+    const yaHayMusica = musicaEncendida;
+    
     reproducirEfecto();
     corazon.classList.add("corazon-activado");
 
@@ -412,12 +425,56 @@ corazon.addEventListener("click", function () {
 
     explosionCorazones();
 
-    iniciarMusica();
+    if (!yaHayMusica) {
+        iniciarMusica().then(function () {
+            indicadorMusica.textContent = esMovil ? "♪" : "♪ Música ON";
+            indicadorMusica.classList.add("visible");
+            setTimeout(function () {
+                indicadorMusica.classList.remove("visible");
+            }, 2000);
+        });
+    }
 
     setTimeout(function () {
         mostrarEscena2();
         crearArbol();
     }, 900);
+}
+
+corazon.addEventListener("click", activarCorazon);
+
+// Toggle de música con doble click o click derecho en el corazón
+corazon.addEventListener("dblclick", function (e) {
+    e.preventDefault();
+    toggleMusica();
+});
+
+corazon.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    toggleMusica();
+});
+
+// En móvil: toque simple = entrada, tap largo = toggle música
+let pressTimer;
+let touchHandled = false;
+
+corazon.addEventListener("touchstart", function () {
+    touchHandled = false;
+    pressTimer = setTimeout(function () {
+        touchHandled = true;
+        toggleMusica();
+    }, 800);
+}, { passive: true });
+
+corazon.addEventListener("touchend", function () {
+    clearTimeout(pressTimer);
+    if (!touchHandled) {
+        activarCorazon();
+    }
+});
+
+corazon.addEventListener("touchmove", function () {
+    clearTimeout(pressTimer);
 });
 
 /* =========================================
