@@ -184,7 +184,7 @@ function crearFrasesOrbital() {
 function crearEstrellas() {
     const contenedor = document.getElementById("estrellas");
     const esMovil = window.innerWidth < 600;
-    const cantidad = esMovil ? 60 : 120;
+    const cantidad = esMovil ? 50 : 120;
 
     for (let i = 0; i < cantidad; i++) {
         const estrella = document.createElement("div");
@@ -207,7 +207,7 @@ function crearEstrellas() {
         contenedor.appendChild(estrella);
     }
 
-    for (let i = 0; i < (esMovil ? 4 : 10); i++) {
+    for (let i = 0; i < (esMovil ? 3 : 10); i++) {
         const fugaz = document.createElement("div");
         fugaz.className = "estrella estrella-fugaz";
         fugaz.style.left = Math.random() * 100 + "%";
@@ -388,8 +388,9 @@ botonMusica.addEventListener("click", async function () {
     const ok = await iniciarMusica();
 
     if (ok) {
-        botonMusica.textContent = "🔊 Música ON";
         botonMusica.classList.add("activo");
+        const icono = esMovil ? '🔊' : '🎵 ON';
+        botonMusica.innerHTML = esMovil ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>' : '🎵 ON';
     }
 });
 
